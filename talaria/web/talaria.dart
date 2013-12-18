@@ -11,16 +11,18 @@ const String COMMENT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERN
 const String COMMIT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY_NAME}/commits';
 const String REPO_COMMIT_URL_ROOT = 'https://github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}/commit/';
 
+//TODO: missing styling
 
 @CustomTag('talaria-comments')
 class TalariaComments extends PolymerElement {
+  @published String permalink;
+  @published bool hide_comments = true;
+  @observable String comment_count;
   String path;
-  String permalink;
-  @published List comments = [];
-  @published String newest_commit_url;
+  List comments = [];
+  String newest_commit_url;
   
-  TalariaComments.created() : super.created() {
-  }
+  TalariaComments.created() : super.created() {}
   
   @override
   void enteredView() {
@@ -31,19 +33,28 @@ class TalariaComments extends PolymerElement {
       _retrieveCommitData(path);  
     } else {
       // TODO for some reason this doesn't work as I expect it to, move it into another lifecycle callback?
-      this.comments = JSON.decode(window.sessionStorage[path]).map((comment) => Comment.fromJson(comment));
+      comments = JSON.decode(window.sessionStorage[path]).map((comment) => Comment.fromJson(comment));
     }
+  }
+  
+  void expand(Event e, var detail, Node target){
+    hide_comments = false;
+  }
+  
+  void _updateCommentCount() {
+    // once dart polymer supports the ternary operator, this can all be done inside the template
+    comment_count = comments.length == 0 ? 'Be the first to comment' : '${comments.length} comment' + (comments.length > 1 ? 's' : '');
   }
 
   void _retrieveCommitData(resourcePath){
     HttpRequest.request('${COMMIT_API_ENDPOINT}?path=${resourcePath}', method: 'get', 
-        requestHeaders: {'Accept':'application/vnd.github.v3.text+json' }).then(_retrieveComments);
+        requestHeaders: {'Accept':'application/vnd.github.v3.text+json' }).then(_retrieveComments).catchError(_handleErrors);
   }
   
   void _retrieveComments(HttpRequest apiResponse) {
     List commits = JSON.decode(apiResponse.response);
     newest_commit_url = '${REPO_COMMIT_URL_ROOT}${commits.first["sha"]}';
-    Future.wait(commits.map(_retrieveCommitComments)).then(_handleComments);
+    Future.wait(commits.map(_retrieveCommitComments)).then(_handleComments).catchError(_handleErrors);
   }
   
   Future _retrieveCommitComments(commit) {
@@ -69,6 +80,12 @@ class TalariaComments extends PolymerElement {
                 comment['body_text']))).toList()
                   ..sort((Comment a, Comment b) => a._time.compareTo(b._time));
     window.sessionStorage[path] = JSON.encode(this.comments);
+    _updateCommentCount();
+  }
+  
+  void _handleErrors(Error error) {
+    // TODO: handle
+    print(error);
   }
 }
 
