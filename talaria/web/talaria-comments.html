@@ -1,0 +1,31 @@
+<polymer-element name="talaria-comments" attributes="permalink">
+<template>
+<div class="comments-wrapper">
+  <div class="comments-header">
+    <h3>Comments</h3>
+    <small>Comments provided via <a href="{{newest_commit_url}}">github</a></small>
+  </div>
+  <div class="comment-count">
+    <a href="#">{{comments.length}}</a>
+  </div>
+  <div class="comments">
+    <template repeat="{{comment in comments}}"> <img
+      class="avatar" height="48" width="48" src="{{comment.avatar}}" />
+    <div class="comment-outer-wrapper">
+      <div class="comment-inner-wrapper">
+        <div class="comment-header">
+          <a href="{{comment.author_profile}}"><b>{{comment.author_name}}</b></a>
+          commented on <a href="{{comment.commit_url}}"><code
+              class="sha">{{comment.short_sha}}</code></a> <span class="time">{{comment.time}}</span>
+        </div>
+        <div class="comment-body">{{comment.body}}</div>
+      </div>
+    </div>
+    </template>
+    <a href="{{newest_commit_url}}"><button type="submit" class="comment-button">Add
+        a Comment</button></a>
+  </div>
+</div>
+</template> <script type="application/dart" src="talaria.dart"></script> 
+</polymer-element>
+

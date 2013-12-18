@@ -1,1 +1,15 @@
 .sass*
+.buildlog
+talaria/web/out/*
+talaria/packages/
+talaria/build/
+talaria/out/
+.project
+talaria/pubspec.lock
+*.iml
+*.ipr
+*.iws
+*.dart.js
+*.js_
+*.js.deps
+*.js.map
