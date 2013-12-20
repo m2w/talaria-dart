@@ -6,7 +6,7 @@ The name talaria comes from the [winged sandals](http://en.wikipedia.org/wiki/Ta
 
 # Why?
 
-Because I personally find the approach using github issues less than ideal. Commit comments have the advantage of being directly "attached" to the relevant file.
+Because I personally find the approach using github issues less than ideal. Commit comments have the notable advantage of being directly "attached" to the relevant content.
 
 # How?
 
