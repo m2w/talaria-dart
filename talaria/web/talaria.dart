@@ -18,11 +18,14 @@ class TalariaComments extends PolymerElement {
   @published String permalink;
   @published bool hide_comments = true;
   @observable String comment_count;
+  String blame_path; // TODO: provide value
   String path;
   List comments = [];
   String newest_commit_url;
   
-  TalariaComments.created() : super.created() {}
+  TalariaComments.created() : super.created() {
+    blame_path = '${REPO_COMMIT_URL_ROOT}...';
+  }
   
   @override
   void enteredView() {
@@ -83,8 +86,14 @@ class TalariaComments extends PolymerElement {
     _updateCommentCount();
   }
   
-  void _handleErrors(Error error) {
-    // TODO: handle
+  void _handleErrors(HttpRequest error) {
+    switch (error.status) {
+      case 403:
+        print("X-Rate Exceeded");
+        break;
+      default:
+        
+    }
     print(error);
   }
 }
@@ -138,13 +147,16 @@ String relativeTimeElapsed(DateTime before) {
   
   var now = new DateTime.now();
   var elapsed = now.difference(before);
+  var days = elapsed.inDays;
+  var years = elapsed.inDays ~/ 365;
+  var months = elapsed.inDays ~/ 30;
   
   // TODO, check months and years, currently seems to always add 1
-  if (elapsed.inDays > 365) {
+  if (elapsed.inDays > 330) { // anything > 11 months = years
     var years = elapsed.inDays ~/ 365;
-    return pluralize(years, 'year');
+    return pluralize(years == 0 ? 1 : years, 'year');
   }
-  if (elapsed.inDays > 30) {
+  if (elapsed.inDays > 25) { // anything > 25 days = months 
     var months = elapsed.inDays ~/ 30;
     return pluralize(months, 'month');
   }
@@ -155,7 +167,7 @@ String relativeTimeElapsed(DateTime before) {
     return pluralize(elapsed.inHours, 'hour');
   }
   if (elapsed.inMinutes > JUST_NOW_LIMIT) {
-    return '${elapsed.inMinutes} hours ago';
+    return '${elapsed.inMinutes} minutes ago';
   } else {
     return 'just now';
   }
