@@ -18,6 +18,7 @@ class TalariaComments extends PolymerElement {
   @published String permalink;
   @published bool hide_comments = true;
   @observable String comment_count;
+  bool error = false;
   String blame_path; // TODO: provide value
   String path;
   List comments = [];
@@ -87,14 +88,14 @@ class TalariaComments extends PolymerElement {
   }
   
   void _handleErrors(HttpRequest error) {
+    this.error = true;
     switch (error.status) {
       case 403:
         print("X-Rate Exceeded");
         break;
       default:
-        
+        print("An error occured.");
     }
-    print(error);
   }
 }
 
