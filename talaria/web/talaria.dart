@@ -151,7 +151,6 @@ String relativeTimeElapsed(DateTime before) {
   var years = elapsed.inDays ~/ 365;
   var months = elapsed.inDays ~/ 30;
   
-  // TODO, check months and years, currently seems to always add 1
   if (elapsed.inDays > 330) { // anything > 11 months = years
     var years = elapsed.inDays ~/ 365;
     return pluralize(years == 0 ? 1 : years, 'year');
