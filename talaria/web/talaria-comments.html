@@ -1,10 +1,12 @@
-<polymer-element name="talaria-comments">
-<template if="{{error}}">
-<div class="comment-load-error">An error occured while retrieving the comments.<br><small> 
-You can still manually view comments for this article by viewing them <a href="{{}}">directly on github</a>.</small></div>
-</template>
-<template if="{{!error}}">
-<template if="{{!hide_comments}}">
+<polymer-element name="talaria-comments"> <template
+  if="{{error}}">
+<div class="comment-load-error">
+  An error occured while retrieving the comments.<br> <small>
+    You can still manually view comments for this article by viewing
+    them <a href="{{blame_path}}">directly on github</a>.
+  </small>
+</div>
+</template> <template if="{{!error}}"> <template if="{{!hide_comments}}">
 <div class="comments-wrapper">
   <div class="comments-header">
     <h3>Comments</h3>
