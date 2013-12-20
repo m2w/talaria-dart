@@ -1,51 +1,82 @@
-# What?
+talaria is a commenting system for static content, such as github pages, that uses github commits to identify content and store its comments. You can see talaria in action [here](http://blog.tibidat.com).
 
-talaria is a commenting system for static content, such as github pages. Instead of github issues, it is based on commit comments.
+# Using talaria
 
-The name talaria comes from the [winged sandals](http://en.wikipedia.org/wiki/Talaria) worn by Hermes in Greek mythology.
+talaria is written in Dart. In case you don't have a Dart environment and prefer to compile talaria yourself, I provide a [simple docker image](), that contains a fully functional dart development environment. Otherwise, you can find the generated javascript file in every tagged release.
 
-# Why?
+To use talaria you need to perform three steps:
 
-Because I personally find the approach using github issues less than ideal. Commit comments have the notable advantage of being directly "attached" to the relevant content.
+## Tell talaria where to find your content
 
-# How?
+Open the dart editor and edit `web/talaria.dart` to use your (publicly accessible) github repository that contains the content:
 
-Using talaria on your own blog is pretty straightforward. For the following, I'm going to presume that your blog is jekyll based:
+```
+const String REPOSITORY_NAME = '{YOUR_USERNAME}.github.com';
+const String GITHUB_USERNAME = '{YOUR_USERNAME}';
+```
 
-1. Inside your blog's repository: `git submodule add https://github.com/m2w/talaria.git talaria`
+Next you can customize the path to your content. Currently talaria is written with a jekyll-based system in mind, although this is relatively simple to adapt to your needs.
 
-2. `cp -i talaria/_includes/* _includes/`, `cp -i talaria/static/js/talaria.js <your_js_dir>`.
-    Then, if you use compass: `cp -i talaria/_sass/talaria.scss <your_sass_dir>/_talaria.scss` and `@import "talaria";` in your main SASS file
-    If not, `cp -i talaria/static/css/talaria.css <your_css_dir>`.
+```
+// talaria uses this to create the path used to identify your content in commits, this MUST be a relative path to the root of your repository!
+const String COMMENTABLE_CONTENT_PATH_PREFIX = '_posts/';
+const String CONTENT_SUFFIX = '.md'; // set this to whatever markup your content is written in
+```
 
-3. [register a github OAuth application](https://github.com/settings/applications/new) for your domain
+To regenerate the talaria javascript file:
+1. Select the `/web/` directory
 
-4. Include `comments-placeholder.html` in your content container and `comments-template.html` in the footer of your base template. Next add links to `talaria.js` and `talaria.css` as required in your templates. A fully rendered page should look structurally similar to the following:
-    ```html
-    ...
-        <script type="text/javascript" src="/path/to/talaria.js"></script>
-        <link href="/static/css/talaria.css" rel="stylesheet" type="text/css" />
-    ...
-        <article>
-            <header><a class="permalink" href="/permalink-to-post">A post</a></header>
-            ...
-            {% include comments-placeholder.html %}
-        </article>
-    ...
-        <footer>
-            {% include comments-template.html %}
-        </footer>
-    ...
-    ```
+2. Run `Tools -> Pub Build`
 
-5. Add talaria to `exclude` in your `_config.yml`
 
-6. Customize `talaria.scss` or `talaria.css` as required
+__Note__: You can potentially complete this step without the dart editor, as these strings are not minimized during the compilation stage. Have a look at `/build/talaria.html_bootstrap.js`.
 
-# TODOs
+## Customize talaria styling
 
-- [ ] review performance and caching
-- [ ] code cleanup
-- [ ] make the init script more portable
-- [ ] add more documentation
-- [ ] gracefull error handling (e.g. when exceeding the `X-RateLimit-Limit`)
+The default talaria styling is an almost clone of the github comment styling. You can modify this to suit your needs in `/web/talaria.css`.
+
+## Add it to your site
+
+There is two different approaches, depending on whether you want a clean separation between your content and talaria or less request overhead.
+
+- To have a clear separation between talaria and your content
+
+1. Copy `/web/talaria.css`, `/web/talaria-comments.html` and `/build/talaria.html_bootstrap.js` over to your site.
+For demonstrative purposes, let's assume you copied them into `{PATH_TO_YOUR_BLOG}/talaria`.
+
+2. Add the following to your base template `<head>`:
+
+```
+<link rel="stylesheet" href="talaria/talaria.css">
+<link rel="import" href="talaria/talaria-comments.html">
+<script src="talaria.html_bootstrap.dart.js"></script>
+```
+
+- To reduce the request overhead
+
+1. Copy `/web/talaria.css`, `/web/talaria-comments.html` and `/build/talaria.html_bootstrap.js` over to your site.
+For demonstrative purposes, let's assume you copied them into `{PATH_TO_YOUR_BLOG}/talaria`.
+
+2. Add the following to your base template `<head>`:
+
+```
+<link rel="stylesheet" href="talaria/talaria.css">
+<script src="talaria.html_bootstrap.dart.js"></script>
+```
+
+3. Somewhere at the beginning of your `<body>` include the **contents** of `talaria-comments.html`.
+
+- The final step is identical for both approaches:
+
+In your content template, e.g. `_layouts/posts.html`, include `<talaria-comments permalink="{{PERMALINK_FOR_THIS_POST}}"></talaria-comments>`.
+
+__CARE__: It is very important that your permalinks allow talaria to find the file that contains the content; e.g. if the permalink to a post is `/2013/03/22/blog-relaunch` talaria expects your content for this post to be located in the file `COMMENTABLE_CONTENT_PATH_PREFIX/2013-03-22-blog-relaunchCONTENT_SUFFIX`!
+
+# FYI
+
+The github API is currently restricted to **60 API calls per hour** for unauthenticated users. This means that your users can retrieve comments for at most 30 entries. This number is lowered if you have multiple commits per 'content source file'; by 1 additional API request per additional commit (so if you have 3 commits for a the post `/2013/03/22/blog-relaunch`, talaria actually needs a total of 4 API calls to get all comments). talaria tries to use `sessionStorage` to reduce the total number of API calls, but users could potentially still run into `403s` from throtteling, in which case talaria simply states that comments can be viewed directly on github, along with a link to the latest commit for the entry.
+
+Users clicking the "Add comment" buttons get redirected to github, where they can then login and comment. However, at this point I do not know of a way to get users back to your site after the redirect.
+
+# Trivia
+talaria are the [winged sandals](http://en.wikipedia.org/wiki/Talaria) worn by Hermes in Greek mythology.
