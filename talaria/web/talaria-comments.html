@@ -1,5 +1,40 @@
 <polymer-element name="talaria-comments"> 
 <template>
+<style>
+button {
+  
+}
+div.comment-load-error {
+  
+}
+div.wrapper {
+  
+}
+div.header {
+  
+}
+div.comments {
+  
+}
+div.comment-background {
+  
+}
+div.comment-foreground {
+  
+}
+div.comment-header {
+  
+}
+img.comment-author-avatar {
+  
+}
+div.comment-body {
+  
+}
+div.comment-count {
+  
+}
+</style>
 <template if="{{error}}">
 <div class="comment-load-error">
   An error occured while retrieving the comments.<br> <small>
@@ -7,31 +42,29 @@
     them <a href="{{blame_path}}">directly on github</a>.
   </small>
 </div>
-</template>  
+</template>
 <template if="{{!hide_comments && !error}}">
-<div class="comments-wrapper">
-  <div class="comments-header">
+<div class="wrapper">
+  <div class="header">
     <h3>Comments</h3>
     <small>Comments provided via <a href="{{newest_commit_url}}">github</a></small>
   </div>
   <div class="comments">
     <template repeat="{{comment in comments}}"> <img
-      class="avatar" height="48" width="48" src="{{comment.avatar}}"
+      class="comment-author-avatar" height="48" width="48" src="{{comment.avatar}}"
       alt="" />
-    <div class="comment-outer-wrapper">
-      <div class="comment-inner-wrapper">
+    <div class="comment-background">
+      <div class="comment-foreground">
         <div class="comment-header">
           <a href="{{comment.author_profile}}"><b>{{comment.author_name}}</b></a>
-          commented on <a href="{{comment.commit_url}}"><code
-              class="sha">{{comment.short_sha}}</code></a> <span
+          commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a> <span
             class="time">{{comment.time}}</span>
         </div>
         <div class="comment-body">{{comment.body}}</div>
       </div>
     </div>
     </template>
-    <a href="{{newest_commit_url}}"><button type="submit"
-        class="comment-button">Add a Comment</button></a>
+    <a href="{{newest_commit_url}}"><button type="submit">Add a Comment</button></a>
   </div>
 </div>
 </template> 

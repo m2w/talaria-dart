@@ -46,6 +46,7 @@ class TalariaComments extends PolymerElement {
   
   void expand(Event e, var detail, Node target){
     hide_comments = false;
+    e.preventDefault();
   }
   
   void _updateCommentCount() {
