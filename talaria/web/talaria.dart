@@ -9,36 +9,39 @@ const String COMMENTABLE_CONTENT_PATH_PREFIX = '_posts/';
 const String CONTENT_SUFFIX = '.md';
 const String COMMENT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY_NAME}/comments';
 const String COMMIT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY_NAME}/commits';
-const String REPO_COMMIT_URL_ROOT = 'https://github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}/commit/';
+const String REPO_ROOT = 'https://github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}';
+const String REPO_COMMIT_URL_ROOT = '${REPO_ROOT}/commit/';
 
 //TODO: missing styling
 
 @CustomTag('talaria-comments')
 class TalariaComments extends PolymerElement {
+  String path;
+  
   @published String permalink;
   @published bool hide_comments = true;
-  @observable String comment_count;
-  bool error = false;
-  String blame_path; // TODO: provide value
-  String path;
-  List comments = [];
-  String newest_commit_url;
+  @published String comment_count;
+  @published String blame_path;
+  @published List comments = [];
+  @published String newest_commit_url;
   
-  TalariaComments.created() : super.created() {
-    blame_path = '${REPO_COMMIT_URL_ROOT}...';
-  }
+  @observable bool error = false;
+  
+  TalariaComments.created() : super.created() {}
   
   @override
   void enteredView() {
     super.enteredView();
     path = extrapolatePathFromPermalink(permalink);
-    
+    blame_path = '${REPO_ROOT}/blame/master/${path}';
+
     if (!window.sessionStorage.containsKey(path)) {
       _retrieveCommitData(path);  
     } else {
       // TODO for some reason this doesn't work as I expect it to, move it into another lifecycle callback?
       comments = JSON.decode(window.sessionStorage[path]).map((comment) => Comment.fromJson(comment));
     }
+    hide_comments=true;
   }
   
   void expand(Event e, var detail, Node target){

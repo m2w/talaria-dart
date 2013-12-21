@@ -1,12 +1,14 @@
-<polymer-element name="talaria-comments"> <template
-  if="{{error}}">
+<polymer-element name="talaria-comments"> 
+<template>
+<template if="{{error}}">
 <div class="comment-load-error">
   An error occured while retrieving the comments.<br> <small>
     You can still manually view comments for this article by viewing
     them <a href="{{blame_path}}">directly on github</a>.
   </small>
 </div>
-</template> <template if="{{!error}}"> <template if="{{!hide_comments}}">
+</template>  
+<template if="{{!hide_comments && !error}}">
 <div class="comments-wrapper">
   <div class="comments-header">
     <h3>Comments</h3>
@@ -32,9 +34,12 @@
         class="comment-button">Add a Comment</button></a>
   </div>
 </div>
-</template> <template if="{{hide_comments}}">
+</template> 
+<template if="{{hide_comments && !error}}">
 <div class="comment-count">
   <a href="#" on-click="{{expand}}">{{comment_count}}</a>
 </div>
-</template> </template> <script type="application/dart" src="talaria.dart"></script> </polymer-element>
+</template>
+</template> 
+<script type="application/dart" src="talaria.dart"></script> </polymer-element>
 
