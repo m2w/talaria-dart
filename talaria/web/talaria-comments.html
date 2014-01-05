@@ -4,16 +4,24 @@
     h3 {
       margin: 0;
     }
+    h3 small {
+      font-size: 0.7rem;
+    }
     div#wrapper {
       padding: 1em;
     }
     div#comment-list {
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
     }
     div.comment-bubble {
       margin-top: 1.5rem;
       line-height: 1.4;
       font: 13px Helvetica, arial, freesans, clean, sans-serif;
+    }
+    code {
+      color: #666;
+      font-size: 11px;
+      font-family: Consolas, "Liberation Mono", Courier, monospace;
     }
     a > img {
       text-decoration: none;
@@ -83,6 +91,10 @@
       text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
       line-height: 33px;
     }
+    span.header-left {
+      font-size: 11px;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
+    }
     button {
       position: relative;
       display: inline-block;
@@ -112,15 +124,12 @@
   </style>
   <div id="wrapper">
     <div id="header">
-      <h3>Comments <small>provided via <a href="{{newest_commit_url}}">github</a></small></h3>
+      <h3>Comments <small>via <a href="{{newest_commit_url}}">github</a></small></h3>
     </div>
-    <template id="errors" if="{{error}}">
-      <div class="comment-load-error">
+    <template if="{{!error}}">
+      <div id="comment-load-error">
         An error occured while retrieving the comments.<br>
-        <small>
-          You can still manually view comments for this article by viewing
-          them <a href="{{blame_path}}">directly on github</a>.
-        </small>
+        <small>You can still view comments for this article <a href="{{blame_path}}">directly on github</a>.</small>
       </div>
     </template>
     <template if="{{hide_comments && !error}}">
@@ -138,10 +147,8 @@
             <div class="comment-bubble-content">
               <div class="comment-bubble-inner">
                 <div class="comment-header">
-                  <a class="author-nick" href="{{comment.author_profile}}">
-                    <b>{{comment.author_name}}</b>
-                  </a>&nbsp;
-                   commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a>
+                  <a class="author-nick" href="{{comment.author_profile}}"><b>{{comment.author_name}}</b></a>
+                  <span class="header-left">&nbsp;commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a></span>
                   <span class="header-right">{{comment.time}}</span>
                 </div>
                 <html-body divClass="comment-content" content="{{comment.body}}"></html-body>
