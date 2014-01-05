@@ -1,125 +1,163 @@
 <polymer-element name="talaria-comments"> 
 <template>
-<style>
-button {
-  border-radius: 3px;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid #5ca941;
-  background-color: #60b044;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  color: #fff; @ include background-image(linear-gradient(#8add6d,
-  #60b044));
-  background-repeat: repeat-x;
-  cursor: pointer;
-  float:right;
-}
-
-div.comment-load-error {
-  
-}
-
-div.wrapper {
-  font-size: 90%;
-  margin-bottom: 1rem;
-}
-
-div.header h3 {
-  margin-bottom: 0.5rem;
-}
-
-div.comments {
-  width: 95%;
-}
-
-div.comment-background {
-  margin: 0 0 1rem 60px;
-  padding: 3px;
-  background-color: #eee;
-}
-
-div.comment-foreground {
-  border: 1px solid #CACACA;
-  display: block;
-  margin: 0;
-  padding: 0;
-}
-
-div.comment-header {
-  padding: 0 0.4rem;
-  border-bottom: 1px solid #ccc;
-  background-color: #e1e1e1;
-}
-
-span.time {
-  float: right;
-}
-
-img.comment-author-avatar {
-  border: 0;
-  float: left;
-  position: relative;
-  border-radius: 3px;
-  border: 0;
-}
-
-div.comment-body {
-  background-color: #fbfbfb;
-  padding: 0.4rem;
-  position: relative;
-}
-
-div.comment-body p+p {
-  margin-top: 0.4rem;
-}
-
-div.comment-count {
-  float: right;
-  font-size: 90%;
-  margin-bottom: 0.5rem;
-}
-small {
-  font-size: 70%;
-}
-</style>
-
-<template id="comment-wrapper" if="{{!hide_comments && !error}}">
-<div class="wrapper">
-  <div class="header">
-    <h3>Comments <small>Comments provided via <a href="{{newest_commit_url}}">github</a></small></h3>
-  </div>
-  <div class="comments">
-  <template id="comment-list" repeat="{{comment in comments}}"> 
-  <img
-      class="comment-author-avatar" height="48" width="48"
-      src="{{comment.avatar}}" alt="" />
-    <div class="comment-background">
-      <div class="comment-foreground">
-        <div class="comment-header">
-          <a href="{{comment.author_profile}}"><b>{{comment.author_name}}</b></a>
-          commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a>
-          <span class="time">{{comment.time}}</span>
-        </div>
-        <html-body content="{{comment.body}}"></html-body>
-      </div>
+  <style>
+    h3 {
+      margin: 0;
+    }
+    div#wrapper {
+      padding: 1em;
+    }
+    div#comment-list {
+      margin-bottom: 1.5rem;
+    }
+    div.comment-bubble {
+      margin-top: 1.5rem;
+      line-height: 1.4;
+      font: 13px Helvetica, arial, freesans, clean, sans-serif;
+    }
+    a > img {
+      text-decoration: none;
+    }
+    img {
+      position: relative;
+      float: left;
+      border-radius: 3px;
+    }
+    div.comment-bubble-content {
+      position: relative;
+      margin-left: 60px;
+      padding: 3px;
+      background: #eee;
+      border-radius: 3px;
+    }
+    div.comment-bubble-content:before {
+      content: "";
+      display: block;
+      height: 0;
+      width: 0;
+      border: 10px solid #EEE;
+      border-width: 10px 10px 10px 0;
+      border-color: rgba(238,238,238,0) #eee rgba(238,238,238,0) rgba(238,238,238,0);
+      position: absolute;
+      left: -10px;
+      top: 15px;
+    }
+    div.comment-bubble-inner {
+      min-height: 32px;
+      border: 1px solid #CACACA;
+      background-color: #fff;
+    }
+    div.comment-header {
+      height: 33px;
+      padding: 0 10px 0 6px;
+      border-bottom: 1px solid #ccc;
+      background-color: #e1e1e1;
+      background-image: -moz-linear-gradient(#f8f8f8, #e1e1e1);
+      background-image: -webkit-linear-gradient(#f8f8f8, #e1e1e1);
+      background-image: linear-gradient(#f8f8f8, #e1e1e1);
+      background-repeat: repeat-x;
+      font-size: 12px;
+    }
+    div.align-right {
+      text-align: right;
+    }
+    a.author-nick {
+      max-width: 600px;
+      line-height: 33px;
+      font-weight: bold;
+      color: #222;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    span.header-right {
+      float: right;
+      display: inline-block;
+      margin: 0;
+      height: 33px;
+      font-size: 11px;
+      line-height: 33px;
+      font-style: normal;
+      color: #777;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.7);
+      line-height: 33px;
+    }
+    button {
+      position: relative;
+      display: inline-block;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+      white-space: nowrap;
+      background-color: #eeeeee;
+      background-image: -moz-linear-gradient(#fcfcfc, #eee);
+      background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+      background-image: linear-gradient(#fcfcfc, #eee);
+      background-repeat: repeat-x;
+      border-radius: 3px;
+      border: 1px solid #d5d5d5;
+      vertical-align: middle;
+      cursor: pointer;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-appearance: none;
+    }
+  </style>
+  <div id="wrapper">
+    <div id="header">
+      <h3>Comments <small>provided via <a href="{{newest_commit_url}}">github</a></small></h3>
     </div>
+    <template id="errors" if="{{error}}">
+      <div class="comment-load-error">
+        An error occured while retrieving the comments.<br>
+        <small>
+          You can still manually view comments for this article by viewing
+          them <a href="{{blame_path}}">directly on github</a>.
+        </small>
+      </div>
     </template>
-    <a href="{{newest_commit_url}}"><button type="submit">Add
-        a Comment</button></a>
+    <template if="{{hide_comments && !error}}">
+      <div id="comment-count">
+        <a href="#" on-click="{{expand}}">{{comment_count}}</a>
+      </div>
+    </template>
+    <template if="{{!hide_comments && !error}}">
+      <div id="comment-list">
+        <template repeat="{{comment in comments}}"> 
+          <div class="comment-bubble">
+            <a href="{{comment.author_profile}}">
+              <img class="comment-author-avatar" height="48" width="48" src="{{comment.avatar}}" alt="" />
+            </a>
+            <div class="comment-bubble-content">
+              <div class="comment-bubble-inner">
+                <div class="comment-header">
+                  <a class="author-nick" href="{{comment.author_profile}}">
+                    <b>{{comment.author_name}}</b>
+                  </a>&nbsp;
+                   commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a>
+                  <span class="header-right">{{comment.time}}</span>
+                </div>
+                <html-body divClass="comment-content" content="{{comment.body}}"></html-body>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="align-right">
+        <a href="{{newest_commit_url}}">
+          <button type="submit">Add a Comment</button>
+        </a>
+      </div>
+    </template>
   </div>
-</div>
 </template> 
-<template id="errors" if="{{error}}">
-<div class="comment-load-error">
-  An error occured while retrieving the comments.<br> <small>
-    You can still manually view comments for this article by viewing
-    them <a href="{{blame_path}}">directly on github</a>.
-  </small>
-</div>
-</template> 
-<template id="comment-count" if="{{hide_comments && !error}}">
-<div class="comment-count">
-  <a href="#" on-click="{{expand}}">{{comment_count}}</a>
-</div>
-</template> 
-</template> <script type="application/dart" src="talaria.dart"></script> </polymer-element>
+<script type="application/dart" src="talaria.dart"></script> 
+</polymer-element>
 

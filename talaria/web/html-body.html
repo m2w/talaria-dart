@@ -1,6 +1,18 @@
 <polymer-element name="html-body">
 <template>
-<div id="content">{{content}}</div>
+<style>
+div.comment-content {
+  color: #333;
+  font-size: 12px;
+  background: #fbfbfb;
+  padding: 10px;
+  overflow: auto;
+  width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+</style>
+<div id="content" class="{{divClass}}">{{content}}</div>
 </template> 
 <script type="application/dart" src="talaria.dart"></script>
 </polymer-element> 

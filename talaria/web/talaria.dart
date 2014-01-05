@@ -104,6 +104,8 @@ class TalariaComments extends PolymerElement {
 @CustomTag('html-body')
 class HtmlBody extends PolymerElement {
   @published String content;
+  @published String divClass;
+  
   NodeValidator validator;
   
   HtmlBody.created() : super.created() {
