@@ -91,6 +91,7 @@ class TalariaComments extends PolymerElement {
   
   void _handleErrors(Error error, test) {
     this.error = true;
+    // FIXME: cleanup error handling
     switch (error.status) {
       case 403:
         print("X-Rate Exceeded");

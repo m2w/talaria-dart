@@ -126,7 +126,7 @@
     <div id="header">
       <h3>Comments <small>via <a href="{{newest_commit_url}}">github</a></small></h3>
     </div>
-    <template if="{{!error}}">
+    <template if="{{error}}">
       <div id="comment-load-error">
         An error occured while retrieving the comments.<br>
         <small>You can still view comments for this article <a href="{{blame_path}}">directly on github</a>.</small>
