@@ -1,11 +1,9 @@
-.sass*
+packages/
+build/
+out/
+web/packages
+pubspec.lock
 .buildlog
-talaria/web/out/*
-talaria/packages/
-talaria/build/
-talaria/out/
-.project
-talaria/pubspec.lock
 *.iml
 *.ipr
 *.iws
