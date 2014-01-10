@@ -7,13 +7,14 @@ const String REPOSITORY_NAME = 'm2w.github.com';
 const String GITHUB_USERNAME = 'm2w';
 const String COMMENTABLE_CONTENT_PATH_PREFIX = '_posts/';
 const String CONTENT_SUFFIX = '.md';
+
 const String COMMENT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY_NAME}/comments';
 const String COMMIT_API_ENDPOINT = 'https://api.github.com/repos/${GITHUB_USERNAME}/${REPOSITORY_NAME}/commits';
 const String REPO_ROOT = 'https://github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}';
 const String REPO_COMMIT_URL_ROOT = '${REPO_ROOT}/commit/';
 
-@CustomTag('talaria-comments')
-class TalariaComments extends PolymerElement {
+@CustomTag('talaria-wrapper')
+class TalariaWrapper extends PolymerElement {
   String path;
   
   @published String permalink;
@@ -25,7 +26,7 @@ class TalariaComments extends PolymerElement {
   @observable List<Comment> comments = [];
   @observable bool error = false;
   
-  TalariaComments.created() : super.created() {
+  TalariaWrapper.created() : super.created() {
     path = extrapolatePathFromPermalink(permalink);
     blame_path = '${REPO_ROOT}/blame/master/${path}';
 
@@ -92,24 +93,24 @@ class TalariaComments extends PolymerElement {
   void _handleErrors(Error error, test) {
     this.error = true;
     // FIXME: cleanup error handling
-    switch (error.status) {
-      case 403:
-        print("X-Rate Exceeded");
-        break;
-      default:
-        print("An error occured.");
-    }
+//    switch (error.status) {
+//      case 403:
+//        print("X-Rate Exceeded");
+//        break;
+//      default:
+//        print("An error occured.");
+//    }
   }
 }
 
-@CustomTag('html-body')
-class HtmlBody extends PolymerElement {
+@CustomTag('talaria-safehtml')
+class TalariaSafeHtml extends PolymerElement {
   @published String content;
   @published String divClass;
   
   NodeValidator validator;
   
-  HtmlBody.created() : super.created() {
+  TalariaSafeHtml.created() : super.created() {
     validator = new NodeValidatorBuilder()
     ..allowHtml5();
   }

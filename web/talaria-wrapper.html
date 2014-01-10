@@ -1,4 +1,4 @@
-<polymer-element name="talaria-comments"> 
+<polymer-element name="talaria-wrapper"> 
 <template>
   <style>
     h3 {
@@ -151,7 +151,7 @@
                   <span class="header-left">&nbsp;commented on <a href="{{comment.commit_url}}"><code>{{comment.short_sha}}</code></a></span>
                   <span class="header-right">{{comment.time}}</span>
                 </div>
-                <html-body divClass="comment-content" content="{{comment.body}}"></html-body>
+                <talaria-safehtml divClass="comment-content" content="{{comment.body}}"></talaria-safehtml>
               </div>
             </div>
           </div>
