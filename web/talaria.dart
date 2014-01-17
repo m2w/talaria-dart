@@ -124,13 +124,13 @@ class TalariaSafeHtml extends PolymerElement {
   }
 }
 
-class Comment {
-  String sha, author_name, author_profile, avatar, body;
-  int id;
+class Comment extends Object with Observable {
+  @observable String sha, author_name, author_profile, avatar, body;
+  @observable int id;
   DateTime _time;
-  String get commit_url => '${REPO_COMMIT_URL_ROOT}${sha}';
-  String get time => relativeTimeElapsed(this._time);
-  String get short_sha => sha.substring(0, 6);
+  @observable String get commit_url => '${REPO_COMMIT_URL_ROOT}${sha}';
+  @observable String get time => relativeTimeElapsed(this._time);
+  @observable String get short_sha => sha.substring(0, 6);
   
   static Comment fromJson(Map json) {
     return new Comment(
