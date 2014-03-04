@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sample app</title>
+    
+    <link rel="import" href="talaria-wrapper.html">
+    <link rel="import" href="talaria-safehtml.html">
+    <script type="application/dart">export 'package:polymer/init.dart';</script>
+    <script src="packages/browser/dart.js"></script>
+  </head>
+  <body>
+  <article>
+    <header>
+        <h2><a href="/2013/03/22/blog-relaunch" class="permalink">¶</a> Blog relaunch</h2>
+         <small>22 March 2013, posted by Moritz. <br>Tagged as: jekyll</small>
+    </header>
+    <p>I just moved my blog to github. There are two main reasons for the move: First, it moves another "critical" component off my server and into the cloud. This allows me to experiment more on my server with less fear of consequences. Second, I have been wanting to give <a href="https://github.com/mojombo/jekyll">jekyll</a> a try for a while now, and while this isn't a reason to move to github per se, my current deployment mechanic is lacking, and github nicely streamlines it for me. A further addition that is currently in planning stage is to add a github-based commenting system to the blog.</p>
+
+<p>There are currently a number of people using github issues for commenting. However, I find that approach unclean, as the comments are detached from the actual content you are commenting on. Instead, my idea is to instead base commenting on commit comments. The plan is to create an AJAX based system that follows the following mechanic:</p>
+
+<ol>
+<li>Grab all commit comments</li>
+<li>Grab the permalink of the post - convert it to the file name</li>
+<li>Extract all comments that deal with said file</li>
+<li><p>Display the count on the index (fade-in for actual comments), display the comment contents on the permalink page</p>
+
+<p>If this is too slow, drop index support - generate the comment count statically each time a new post gets added</p></li>
+</ol>
+
+<p>Relaunching the blog also gave me the opportunity to redesign it. I switched to a very simplistic design, that I believe offers good readability and makes good use of screen real-estate.</p>
+
+<talaria-wrapper permalink="/2013/03/22/blog-relaunch" hide_comments="true"></talaria-wrapper>
+
+</article>    
+    
+
+  </body>
+</html>

@@ -1,4 +1,13 @@
-.DS_Store
-packages
-.project
+packages/
+build/
+out/
+web/packages
 pubspec.lock
+.buildlog
+*.iml
+*.ipr
+*.iws
+*.dart.js
+*.js_
+*.js.deps
+*.js.map
