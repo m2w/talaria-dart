@@ -85,8 +85,8 @@ e.g. if the permalink to a post is ``/2013/03/22/blog-relaunch`` talaria expects
 
 There are a couple of things still missing:
 
--[] Customizable permalink schemes
--[] Improvement of the error handling (this includes edge cases, such as wrong repository names, or invalid permalinks)
+- Catch up to the javascript version with regards to error handling and modularity 
+- Increase customizability
 
 
 # FYI
